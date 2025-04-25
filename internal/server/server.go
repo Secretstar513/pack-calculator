@@ -80,8 +80,8 @@ func (s *Server) handlePacks(w http.ResponseWriter, r *http.Request) {
 func (s *Server) Routes() http.Handler {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/api/calculate", s.handleCalc)
-	mux.HandleFunc("/api/packs", s.handlePacks) // NEW
+	mux.HandleFunc("/calculate", s.handleCalc)
+	mux.HandleFunc("/packs", s.handlePacks) // NEW
 	// mux.Handle("/", http.FileServer(http.Dir("./public"))) // UI
 	mux.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("public"))))
 

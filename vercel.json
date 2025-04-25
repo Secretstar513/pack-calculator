@@ -8,6 +8,6 @@
 
   "rewrites": [
     { "source": "/", "destination": "/public/index.html" },
-    { "source": "/calculate", "destination": "/api/calculate.go" }
+    { "source": "/api/calculate", "destination": "/api/calculate.go" }
   ]
 }

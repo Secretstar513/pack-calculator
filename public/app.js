@@ -12,7 +12,7 @@ document.getElementById('calcBtn').addEventListener('click', calc);
 // ---------- INITIAL LOAD ----------
 (async () => {
   try {
-    const res  = await fetch('/api/packs');
+    const res  = await fetch('/packs');
     const data = res.ok ? await res.json() : null;
     showPackSizes(data?.length ? data : undefined);
   } catch {
@@ -50,7 +50,7 @@ async function savePacks() {
   }
 
   try {
-    const res = await fetch('/api/packs', {
+    const res = await fetch('/packs', {
       method : 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body   : JSON.stringify({ packSizes: sizes }),
@@ -73,7 +73,7 @@ async function calc() {
   }
 
   try {
-    const res = await fetch('/api/calculate', {
+    const res = await fetch('/calculate', {
       method : 'POST',
       headers: { 'Content-Type': 'application/json' },
       body   : JSON.stringify({ items }),
