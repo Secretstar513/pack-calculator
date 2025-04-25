@@ -1,69 +1,47 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>Order-Pack Calculator</title>
-  <style>
-    body{font-family:sans-serif;max-width:640px;margin:auto;padding:24px}
-    h1{margin-top:0}
-    label{display:flex;gap:8px;align-items:center;margin-bottom:8px}
-    input[type=number]{width:100%;padding:4px}
-    button{background:#28a745;color:#fff;border:none;padding:8px 16px;
-           border-radius:4px;font-size:14px;cursor:pointer}
-    table{border-collapse:collapse;width:100%;margin-top:16px}
-    th,td{border:1px solid #999;padding:6px;text-align:center}
-    #msg{color:#c00;margin-top:8px}
-  </style>
-</head>
-<body>
+  <head>
+    <meta charset="utf-8" />
+    <title>Order Packs Calculator</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-<h1>Order-Pack Calculator</h1>
+  <body>
+    <main class="container">
+      <h1>Order Packs Calculator</h1>
 
-<label>
-  Items to order:
-  <input id="items" type="number" min="1" placeholder="e.g. 263">
-</label>
-<button onclick="calculate()">Calculate</button>
-<div id="msg"></div>
+      <!-- SECTION 1 – Edit pack sizes -->
+      <section>
+        <h2>Pack Sizes</h2>
+        <div id="packList" class="pack-list"></div>
 
-<table id="result" style="display:none">
-  <thead><tr><th>Pack size</th><th>Quantity</th></tr></thead>
-  <tbody></tbody>
-</table>
+        <div class="btn-row">
+          <button id="addPack" class="btn">＋ Add pack size</button>
+          <button id="savePacks" class="btn">Submit pack sizes change</button>
+        </div>
+        <p id="packMsg" class="msg"></p>
+      </section>
 
-<script>
-async function calculate() {
-  const items = +document.getElementById('items').value;
-  if (items <= 0) { showMsg('Enter a positive number'); return; }
+      <hr />
+      <!-- SECTION 2 – Calculate order -->
+      <section>
+        <h2>Calculate packs for order</h2>
+        <div class="flex">
+          <label for="items" class="items-label">Items:</label>
+          <input id="items" type="number" min="1" required />
+          <button id="calcBtn" class="btn">Calculate</button>
+        </div>
+        <p id="calcMsg" class="msg"></p>
 
-  try {
-    const r = await fetch('/api/calculate', {          // <— Vercel function path
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({items})
-    });
-    if (!r.ok) { showMsg(await r.text()); return; }
+        <table id="resultTbl" class="result-table hidden" aria-live="polite">
+          <thead>
+            <tr><th>Pack</th><th>Quantity</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </main>
 
-    const {result} = await r.json();
-    renderTable(result);
-    showMsg('');
-  } catch (e) {
-    showMsg('Network error – try again');
-  }
-}
-
-function renderTable(obj) {
-  const tbody = document.querySelector('#result tbody');
-  tbody.innerHTML = '';
-  Object.entries(obj).sort((a,b)=>b[0]-a[0])  // bigger packs first
-        .forEach(([pack, qty]) => {
-          tbody.innerHTML += `<tr><td>${pack}</td><td>${qty}</td></tr>`;
-        });
-  document.getElementById('result').style.display = '';
-}
-
-function showMsg(txt){ document.getElementById('msg').textContent = txt; }
-</script>
-
-</body>
+    <script type="module" src="app.js"></script>
+  </body>
 </html>

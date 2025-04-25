@@ -1,8 +1,11 @@
 {
+  "outputDirectory": "public",
+
   "functions": {
     "api/**/*.go": { "memory": 128, "maxDuration": 10 }
   },
   "cleanUrls": true,
+
   "rewrites": [
     { "source": "/", "destination": "/public/index.html" },
     { "source": "/calculate", "destination": "/api/calculate.go" }
