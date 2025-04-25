@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/CristoffGit/pack-calculator/internal/calc"
+	"github.com/Secretstar513/pack-calculator/internal/calc"
 )
 
 type Server struct {
@@ -40,7 +40,7 @@ func (s *Server) handleCalc(w http.ResponseWriter, r *http.Request) {
 func (s *Server) Routes() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/calculate", s.handleCalc)
-	mux.Handle("/", http.FileServer(http.Dir("./static"))) // UI later
+	mux.Handle("/", http.FileServer(http.Dir("./public"))) // UI later
 	return mux
 }
 

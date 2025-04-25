@@ -6,7 +6,7 @@ import (
 	"os"
 	"sync"
 
-	"github.com/CristoffGit/pack-calculator/internal/calc"
+	"github.com/Secretstar513/pack-calculator/internal/calc"
 )
 
 // ---------- server state -----------------------------------------------------
@@ -20,8 +20,12 @@ func New(packs []int) *Server { return &Server{PackSizes: packs} }
 
 // ---------- request / response shapes ---------------------------------------
 
-type req struct{ Items int `json:"items"` }
-type resp struct{ Result map[int]int `json:"result"` }
+type req struct {
+	Items int `json:"items"`
+}
+type resp struct {
+	Result map[int]int `json:"result"`
+}
 
 // ---------- /calculate -------------------------------------------------------
 
@@ -76,9 +80,10 @@ func (s *Server) handlePacks(w http.ResponseWriter, r *http.Request) {
 func (s *Server) Routes() http.Handler {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/calculate", s.handleCalc)
-	mux.HandleFunc("/packs", s.handlePacks)               // NEW
-	mux.Handle("/", http.FileServer(http.Dir("./static"))) // UI
+	mux.HandleFunc("/api/calculate", s.handleCalc)
+	mux.HandleFunc("/api/packs", s.handlePacks) // NEW
+	// mux.Handle("/", http.FileServer(http.Dir("./public"))) // UI
+	mux.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("public"))))
 
 	return mux
 }
