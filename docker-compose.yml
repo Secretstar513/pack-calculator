@@ -2,4 +2,4 @@ version: "3.9"
 services:
   api:
     build: .
-    ports: ["8080:8080"]
+    ports: ["8000:8000"]

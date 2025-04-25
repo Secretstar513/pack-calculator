@@ -10,6 +10,6 @@ import (
 func main() {
 	packs := server.LoadPacks()
 	srv := server.New(packs)
-	log.Println("⇢  Listening on :8080")
-	log.Fatal(http.ListenAndServe(":8080", srv.Routes()))
+	log.Println("⇢  Listening on :8000")
+	log.Fatal(http.ListenAndServe(":8000", srv.Routes()))
 }
