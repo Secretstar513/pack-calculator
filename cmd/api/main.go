@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/CristoffGit/pack-calculator/internal/server"
+	"github.com/Secretstar513/pack-calculator/internal/server"
 )
 
 func main() {

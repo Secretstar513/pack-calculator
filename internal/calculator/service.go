@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/CristoffGit/pack-calculator/internal/calc"
+	"github.com/Secretstar513/pack-calculator/internal/calc"
 )
 
 type Server struct {
