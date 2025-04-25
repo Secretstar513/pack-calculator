@@ -1,69 +1,33 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>Order-Pack Calculator</title>
+<!doctype html><html lang="en"><head>
+  <meta charset="utf-8"><title>Pack-Calculator</title>
   <style>
-    body{font-family:sans-serif;max-width:640px;margin:auto;padding:24px}
-    h1{margin-top:0}
-    label{display:flex;gap:8px;align-items:center;margin-bottom:8px}
-    input[type=number]{width:100%;padding:4px}
-    button{background:#28a745;color:#fff;border:none;padding:8px 16px;
-           border-radius:4px;font-size:14px;cursor:pointer}
-    table{border-collapse:collapse;width:100%;margin-top:16px}
-    th,td{border:1px solid #999;padding:6px;text-align:center}
-    #msg{color:#c00;margin-top:8px}
-  </style>
-</head>
-<body>
-
-<h1>Order-Pack Calculator</h1>
-
-<label>
-  Items to order:
-  <input id="items" type="number" min="1" placeholder="e.g. 263">
-</label>
-<button onclick="calculate()">Calculate</button>
-<div id="msg"></div>
-
-<table id="result" style="display:none">
-  <thead><tr><th>Pack size</th><th>Quantity</th></tr></thead>
-  <tbody></tbody>
-</table>
-
-<script>
-async function calculate() {
-  const items = +document.getElementById('items').value;
-  if (items <= 0) { showMsg('Enter a positive number'); return; }
-
-  try {
-    const r = await fetch('/api/calculate', {          // <— Vercel function path
-      method:'POST',
+  body{font-family:sans-serif;max-width:640px;margin:0 auto;padding:24px}
+  input{padding:4px;width:100%} button{margin-top:8px;padding:8px 16px;
+  background:#28a745;color:#fff;border:none;border-radius:4px;cursor:pointer}
+  table{border-collapse:collapse;width:100%;margin-top:16px}
+  th,td{border:1px solid #999;padding:6px;text-align:center}
+  #error{color:#c00;margin-top:8px}
+  </style></head><body>
+  <h1>Order-Pack Calculator</h1>
+  <label>Items to order:<input id="items" type="number" min="1" placeholder="263"></label>
+  <button onclick="calc()">Calculate</button><div id="error"></div>
+  <table id="out" style="display:none"><thead><tr><th>Pack</th><th>Qty</th></tr></thead><tbody></tbody></table>
+  <script>
+  async function calc(){
+    const items=+document.getElementById('items').value;
+    if(items<=0){msg('Enter a positive number');return;}
+    const r=await fetch('/calculate',{method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({items})
-    });
-    if (!r.ok) { showMsg(await r.text()); return; }
-
-    const {result} = await r.json();
-    renderTable(result);
-    showMsg('');
-  } catch (e) {
-    showMsg('Network error – try again');
+      body:JSON.stringify({items})});
+    if(!r.ok){msg(await r.text());return;}
+    const {result}=await r.json();render(result);msg('');
   }
-}
-
-function renderTable(obj) {
-  const tbody = document.querySelector('#result tbody');
-  tbody.innerHTML = '';
-  Object.entries(obj).sort((a,b)=>b[0]-a[0])  // bigger packs first
-        .forEach(([pack, qty]) => {
-          tbody.innerHTML += `<tr><td>${pack}</td><td>${qty}</td></tr>`;
-        });
-  document.getElementById('result').style.display = '';
-}
-
-function showMsg(txt){ document.getElementById('msg').textContent = txt; }
-</script>
-
-</body>
-</html>
+  function render(obj){
+    const tbody=document.querySelector('#out tbody');tbody.innerHTML='';
+    Object.entries(obj).sort((a,b)=>b[0]-a[0])
+      .forEach(([p,q])=>tbody.innerHTML+=`<tr><td>${p}</td><td>${q}</td></tr>`);
+    document.getElementById('out').style.display='';
+  }
+  function msg(t){document.getElementById('error').textContent=t;}
+  </script></body></html>
+  

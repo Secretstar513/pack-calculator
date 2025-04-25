@@ -1,14 +1,9 @@
 {
     "version": 2,
-  
-    "functions": {
-      "api/*.go": {
-        "runtime": "go@1.22"
-      }
-    },
-  
+    "functions": { "api/*.go": { "runtime": "go@1.22" } },
     "routes": [
       { "src": "/calculate", "dest": "/api/calculate.go" },
       { "src": "/(.*)", "dest": "/public/$1" }
     ]
   }
+  
