@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Secretstar513/pack-calculator/blob/main/internal/calc"
+	"pack-calculator/internal/calc"
 )
 
 type req struct{ Items int `json:"items"` }

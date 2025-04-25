@@ -1,3 +1,3 @@
-module github.com/Secretstar513/pack-calculator/blob/main
+module pack-calculator
 
-go 1.22
+go 1.20
