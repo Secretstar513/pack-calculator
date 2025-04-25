@@ -1,3 +1,3 @@
-module pack-calculator
+module github.com/Secretstar513/pack-calculator
 
 go 1.20
