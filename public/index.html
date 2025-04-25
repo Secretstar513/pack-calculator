@@ -1,33 +1,47 @@
-<!doctype html><html lang="en"><head>
-  <meta charset="utf-8"><title>Pack-Calculator</title>
-  <style>
-  body{font-family:sans-serif;max-width:640px;margin:0 auto;padding:24px}
-  input{padding:4px;width:100%} button{margin-top:8px;padding:8px 16px;
-  background:#28a745;color:#fff;border:none;border-radius:4px;cursor:pointer}
-  table{border-collapse:collapse;width:100%;margin-top:16px}
-  th,td{border:1px solid #999;padding:6px;text-align:center}
-  #error{color:#c00;margin-top:8px}
-  </style></head><body>
-  <h1>Order-Pack Calculator</h1>
-  <label>Items to order:<input id="items" type="number" min="1" placeholder="263"></label>
-  <button onclick="calc()">Calculate</button><div id="error"></div>
-  <table id="out" style="display:none"><thead><tr><th>Pack</th><th>Qty</th></tr></thead><tbody></tbody></table>
-  <script>
-  async function calc(){
-    const items=+document.getElementById('items').value;
-    if(items<=0){msg('Enter a positive number');return;}
-    const r=await fetch('/calculate',{method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({items})});
-    if(!r.ok){msg(await r.text());return;}
-    const {result}=await r.json();render(result);msg('');
-  }
-  function render(obj){
-    const tbody=document.querySelector('#out tbody');tbody.innerHTML='';
-    Object.entries(obj).sort((a,b)=>b[0]-a[0])
-      .forEach(([p,q])=>tbody.innerHTML+=`<tr><td>${p}</td><td>${q}</td></tr>`);
-    document.getElementById('out').style.display='';
-  }
-  function msg(t){document.getElementById('error').textContent=t;}
-  </script></body></html>
-  
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Order Packs Calculator</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <main class="container">
+      <h1>Order Packs Calculator</h1>
+
+      <!-- SECTION 1 – Edit pack sizes -->
+      <section>
+        <h2>Pack Sizes</h2>
+        <div id="packList" class="pack-list"></div>
+
+        <div class="btn-row">
+          <button id="addPack" class="btn">＋ Add pack size</button>
+          <button id="savePacks" class="btn">Submit pack sizes change</button>
+        </div>
+        <p id="packMsg" class="msg"></p>
+      </section>
+
+      <hr />
+      <!-- SECTION 2 – Calculate order -->
+      <section>
+        <h2>Calculate packs for order</h2>
+        <div class="flex">
+          <label for="items" class="items-label">Items:</label>
+          <input id="items" type="number" min="1" required />
+          <button id="calcBtn" class="btn">Calculate</button>
+        </div>
+        <p id="calcMsg" class="msg"></p>
+
+        <table id="resultTbl" class="result-table hidden" aria-live="polite">
+          <thead>
+            <tr><th>Pack</th><th>Quantity</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </main>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
