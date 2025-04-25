@@ -1,9 +1,8 @@
-package main
+package handler                                    // ✅ required by Vercel
 
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 	"strconv"
 	"strings"
 
@@ -13,28 +12,29 @@ import (
 type req struct{ Items int `json:"items"` }
 type resp struct{ Result map[int]int `json:"result"` }
 
-func Handler(w http.ResponseWriter, r *http.Request) {
+func Handler(w http.ResponseWriter, r *http.Request) { // ✅ exported, exact name
 	var q req
 	if err := json.NewDecoder(r.Body).Decode(&q); err != nil {
-		http.Error(w, "bad json", 400); return
+		http.Error(w, "bad json", http.StatusBadRequest)
+		return
 	}
 	out, err := calc.Calculate(q.Items, packSizes())
-	if err != nil { http.Error(w, err.Error(), 400); return }
-
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(resp{Result: out})
+	_ = json.NewEncoder(w).Encode(resp{Result: out})
 }
 
+// optional: read PACK_SIZES env var or fall back to defaults
 func packSizes() []int {
-	if env := os.Getenv("PACK_SIZES"); env != "" {
-		parts := strings.Split(env, ",")
+	if env := strings.TrimSpace(strings.Trim(os.Getenv("PACK_SIZES"), "[]")) ; env != "" {
 		var xs []int
-		for _, p := range parts {
-			if n, _ := strconv.Atoi(strings.TrimSpace(p)); n > 0 {
-				xs = append(xs, n)
-			}
+		for _, s := range strings.Split(env, ",") {
+			if n, _ := strconv.Atoi(strings.TrimSpace(s)); n > 0 { xs = append(xs, n) }
 		}
-		return xs
+		if len(xs) > 0 { return xs }
 	}
 	return []int{250, 500, 1000, 2000, 5000}
 }
